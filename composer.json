@@ -1,0 +1,46 @@
+{
+    "name": "snapwp/snap-compatibility",
+    "license": "GPL-3.0-or-later",
+    "description": "Adds various plugin compatibility fixes into SnapWP",
+    "authors": [
+        {
+            "name": "Jake Whiteley",
+            "email": "jakebwhiteley@gmail.com"
+        }
+    ],
+    "keywords": [
+        "wordpress",
+        "snapwp",
+        "snap framework"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Snap\\Compatibility\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7",
+        "snapwp/snap-core": ">=0.1"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "~3.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
+        "wp-coding-standards/wpcs": "^0.14.1",
+        "friendsofphp/php-cs-fixer": "^2.11"
+    },
+    "scripts": {
+        "sniff": [
+            "phpcs --extensions=php ."
+        ],           
+        "fix": [
+            "php-cs-fixer fix",
+            "phpcbf --extensions=php ."
+        ],
+        "sniff-docs": [
+            "phpcs --ignore=*/vendor/* --extensions=php --standard=WordPress-Docs --exclude=Squiz.Commenting.FileComment ."
+        ],         
+        "fix-docs": [
+            "phpcbf --ignore=*/vendor/* --extensions=php --standard=WordPress-Docs --exclude=Squiz.Commenting.FileComment ."
+        ]
+    }
+}
