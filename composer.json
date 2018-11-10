@@ -11,7 +11,8 @@
     "keywords": [
         "wordpress",
         "snapwp",
-        "snap framework"
+        "snap framework",
+        "plugin compatibility"
     ],
     "autoload": {
         "psr-4": {

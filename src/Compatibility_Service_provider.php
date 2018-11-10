@@ -1,74 +1,44 @@
 <?php
 
-namespace Snap\Package;
+namespace Snap\Compatibility;
 
 use Snap\Services\Config;
 use Snap\Services\Container;
 use Snap\Services\Service_Provider;
 
-
 /**
- * Example Service Provider.
- *
- * This class is auto-wired. So dependencies can be injected automatically via the constructor.
+ * Load various plugin compatibility fixes.
  */
-class Package_Service_Provider extends Service_Provider
+class Compatibility_Service_Provider extends Service_Provider
 {
     /**
-     * Register any services into the container.
+     * Load any fixes.
      *
-     * This method is run after snap-core has been initialized, but does not guarantee all other packages have been.
-     */
-    public function register()
-    {
-        // Add package config to the Snap Config service.
-        $this->add_config_location(\realpath(__DIR__ . '/../config'));
-
-        // If your package adds functions to the global namespace, include them.
-        require_once __DIR__ . '/functions.php';
-
-        // As the package config has now been added to the Config service, all config is available to use.
-        if (Config::get('package.example_config_item') === true) {
-            // Do something.
-        }
-
-        /*
-         * Indicates that if this package is published, the contents of the config directory should be published
-         * to the active theme.
-         */
-        $this->publishes_config(\realpath(__DIR__ . '/../config'));
-
-        /*
-         * Packages can publish anything into a theme - not just config.
-         *
-         * All published directories can be 'tagged' allowing theme developers to publish exactly what they need.
-         */
-        $this->publishes_directory('directory to publish', 'target directory in theme', 'tag');
-    }
-
-    /**
-     * This method is run after all other packages have been registered - directly before any routing takes place.
-     *
-     * Typically this method is used to attach hooks and interface with other packages.
-     *
-     * This method is auto-wired.
+     * @since 1.0.0
      */
     public function boot()
     {
-        /*
-         * All service providers use the \Snap\Core\Concerns\Manages_Hooks trait.
-         *
-         * This provides a simple way to add methods from this class as WordPress hooks.
-         */
-        $this->add_action('after_setup_theme', 'example_hook');
-        $this->remove_action('after_setup_theme', 'example_hook');
+        if ($this->is_offload_media_present() === true && Config::get('images.dynamic_image_sizes') !== false) {
+            Container::resolve('\\Snap\\Compatibility\\Fixes\\Offload_Media')->run();
+        }
     }
 
     /**
-     * Example hook callback.
+     * Check if WP Offload S3/Offload Media plugin active.
+     *
+     * @since  1.0.0
+     *
+     * @return boolean
      */
-    public function example_hook()
+    private function is_offload_media_present()
     {
+        if (isset($GLOBALS['as3cf'])
+            || isset($GLOBALS['as3cfpro_compat_check'])
+            || \class_exists('AS3CF_Compatibility_Check')
+        ) {
+            return true;
+        }
 
+        return false;
     }
 }
