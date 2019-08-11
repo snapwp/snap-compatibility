@@ -68,12 +68,16 @@ class Offload_Media extends Hookable
             if ($as3cf->get_setting('remove-local-file') == true) {
                 // Copy original to server.
                 if (isset($as3cf->plugin_compat)) {
-                    return $as3cf->plugin_compat->copy_provider_file_to_server($provider_object, $file);
+                    $file = $as3cf->plugin_compat->copy_provider_file_to_server($provider_object, $file);
                 }
             } elseif (!\file_exists($file)) {
                 if (isset($as3cf->plugin_compat)) {
-                    return $as3cf->plugin_compat->copy_provider_file_to_server($provider_object, $file);
+                    $file = $as3cf->plugin_compat->copy_provider_file_to_server($provider_object, $file);
                 }
+            }
+
+            if ($file !== false) {
+                return $file;
             }
         }
 
