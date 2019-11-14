@@ -62,7 +62,7 @@ class Offload_Media extends Hookable
         if (isset($GLOBALS['as3cf'])) {
             global $as3cf;
 
-            $provider_object = $as3cf->get_attachment_provider_info($id);
+            $provider_object = \DeliciousBrains\WP_Offload_Media\Items\Media_Library_Item::get_by_source_id($id);
             $file = \get_attached_file($id, true);
 
             if ($as3cf->get_setting('remove-local-file') == true) {
