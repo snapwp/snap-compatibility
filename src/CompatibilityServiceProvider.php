@@ -2,6 +2,7 @@
 
 namespace Snap\Compatibility;
 
+use Snap\Compatibility\Fixes\OffloadMedia;
 use Snap\Services\Config;
 use Snap\Services\Container;
 use Snap\Services\ServiceProvider;
@@ -17,7 +18,7 @@ class CompatibilityServiceProvider extends ServiceProvider
     public function boot()
     {
         if ($this->isOffloadMediaPresent() === true && Config::get('images.dynamic_image_sizes') !== false) {
-            Container::resolve('\\Snap\\Compatibility\\Fixes\\Offload_Media')->run();
+            Container::resolve(OffloadMedia::class)->run();
         }
     }
 
