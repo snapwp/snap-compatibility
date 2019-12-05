@@ -14,11 +14,9 @@ class OffloadMedia extends Hookable
      */
     public function boot()
     {
-        if (isset($GLOBALS['as3cf'])) {
-            $this->addFilter('snap_dynamic_image_source', 'downloadBucketImageToServer');
-            $this->addFilter('as3cf_preserve_file_from_local_removal', 'runGarbageCollection');
-            $this->addAction('snap_deleted_dynamic_image', 'handleDeletedImage');
-        }
+        $this->addFilter('snap_dynamic_image_source', 'downloadBucketImageToServer');
+        $this->addFilter('as3cf_preserve_file_from_local_removal', 'runGarbageCollection');
+        $this->addAction('snap_deleted_dynamic_image', 'handleDeletedImage');
     }
 
     /**
