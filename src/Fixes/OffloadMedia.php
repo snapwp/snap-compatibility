@@ -14,11 +14,10 @@ class OffloadMedia extends Hookable
      */
     public function boot()
     {
-        if (isset($GLOBALS['as3cf'])) {
-            $this->addFilter('snap_dynamic_image_source', 'downloadBucketImageToServer');
-            $this->addFilter('as3cf_preserve_file_from_local_removal', 'runGarbageCollection');
-            $this->addAction('snap_deleted_dynamic_image', 'handleDeletedImage');
-        }
+        $this->addFilter('snap_dynamic_image_source', 'downloadBucketImageToServer');
+        $this->addFilter('as3cf_preserve_file_from_local_removal', 'runGarbageCollection');
+        $this->addAction('snap_deleted_dynamic_image', 'handleDeletedImage');
+        $this->addFilter('snap_run_attribute_accessors', 'stopNestingIssue');
     }
 
     /**
@@ -81,5 +80,17 @@ class OffloadMedia extends Hookable
     {
         \gc_collect_cycles();
         return $preserve;
+    }
+
+    /**
+     * There are situations where the PostType hookable runAttributeAccessors method causes a loop.
+     */
+    public function stopNestingIssue(bool $shortCircuit, $default, int $object_id, string $meta_key): bool
+    {
+        if (\strpos($meta_key, 'amazonS3_cache') !== false) {
+            return true;
+        }
+
+        return $shortCircuit;
     }
 }
